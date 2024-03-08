@@ -10,6 +10,9 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 
+    <label> Error Message : </label> @ViewBag.ErrorMessage
+    <label> Stack Trace : </label> @ViewBag.StackTrace
+
     @foreach (var book in Model)
     {
         @Html.Label(book.BookName)

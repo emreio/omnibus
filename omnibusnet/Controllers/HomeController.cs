@@ -27,24 +27,32 @@ public class HomeController : Controller
     {
         List<Book> books = new List<Book>();
 
-        using (SqlConnection sqlCon = new SqlConnection())
+        try
         {
-            sqlCon.ConnectionString = "Server=tcp:omnibus.database.windows.net,1433;Initial Catalog=Inventory;Persist Security Info=False;User ID=CloudSA7a07e689;Password=1qaz!QAZ;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-            sqlCon.Open();
-
-            SqlCommand command = new SqlCommand("SELECT * FROM dbo.Books", sqlCon);
-            SqlDataReader sqlReader = command.ExecuteReader();
-            while (sqlReader.Read())
+            using (SqlConnection sqlCon = new SqlConnection())
             {
-                Book b = new Book();
-                b.BookName = sqlReader["BookName"].ToString();
-                b.BookAuthor = sqlReader["BookAuthor"].ToString();
-                b.ISBN = sqlReader.GetSqlString(3).Value;
+                sqlCon.ConnectionString = "Server=tcp:omnibus.database.windows.net,1433;Initial Catalog=Inventory;Persist Security Info=False;User ID=CloudSA7a07e689;Password=1qaz!QAZ;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                sqlCon.Open();
 
-                books.Add(b);
+                SqlCommand command = new SqlCommand("SELECT * FROM dbo.Books", sqlCon);
+                SqlDataReader sqlReader = command.ExecuteReader();
+                while (sqlReader.Read())
+                {
+                    Book b = new Book();
+                    b.BookName = sqlReader["BookName"].ToString();
+                    b.BookAuthor = sqlReader["BookAuthor"].ToString();
+                    b.ISBN = sqlReader.GetSqlString(3).Value;
+
+                    books.Add(b);
+                }
+
+                sqlReader.Close();
             }
-
-            sqlReader.Close();
+        }
+        catch (Exception ex)
+        {
+            ViewBag.ErrorMessage = ex.Message != null ? ex.Message.ToString() : "no exception message";
+            ViewBag.StackTrace = ex.StackTrace != null ? ex.StackTrace.ToString() : "no stack trace";
         }
 
         return View(books);
