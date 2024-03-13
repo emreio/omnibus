@@ -4,5 +4,5 @@
 // Write your JavaScript code.
 
 +(function(){
-    alert("wlcm");
+    //alert("wlcm");
 })();
